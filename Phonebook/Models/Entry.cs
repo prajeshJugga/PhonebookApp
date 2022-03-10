@@ -1,9 +1,12 @@
-﻿namespace Phonebook.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Phonebook.Models
 {
     public class Entry
     {
-        public string PhoneBookName { get; set; }
         public string Name { get; set; }
         public string Number { get; set; }
+        [Display(Name = "Phone Book Name")]
+        public string PhoneBookName { get; set; }
     }
 }

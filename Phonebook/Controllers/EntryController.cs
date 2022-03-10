@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Phonebook.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Phonebook.Controllers
 {
@@ -20,13 +23,25 @@ namespace Phonebook.Controllers
         // GET: EntryController/Create
         public ActionResult Create()
         {
+            ViewBag.PhoneBookNames = new List<string>(); // GetPhoneBookNames();
             return View("Create");
+        }
+
+        [NonAction]
+        private List<string> GetPhoneBookNames()
+        {
+            return new List<string>
+            {
+                "Home",
+                "Work",
+                "Friends"
+            };
         }
 
         // POST: EntryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(IFormCollection collection, Entry entry)
         {
             try
             {
