@@ -1,47 +1,34 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Phonebook.Models;
-using System;
 using System.Collections.Generic;
 
 namespace Phonebook.Controllers
 {
-    public class EntryController : Controller
+    public class PhoneBookController : Controller
     {
-        // GET: EntryController
+        // GET: PhoneBookController
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: EntryController/Details/5
+        // GET: PhoneBookController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View("View");
         }
 
-        // GET: EntryController/Create
+        // GET: PhoneBookController/Create
         public ActionResult Create()
         {
-            ViewBag.PhoneBookNames = GetPhoneBookNames();
             return View("Create");
         }
 
-        [NonAction]
-        private List<string> GetPhoneBookNames()
-        {
-            return new List<string>
-            {
-                "Home",
-                "Work",
-                "Friends"
-            };
-        }
-
-        // POST: EntryController/Create
+        // POST: PhoneBookController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection, Entry entry)
+        public ActionResult Create(IFormCollection collection, PhoneBook phoneBook)
         {
             try
             {
@@ -53,16 +40,25 @@ namespace Phonebook.Controllers
             }
         }
 
-        // GET: EntryController/Edit/5
+        // GET: PhoneBookController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            PhoneBook phonebook = new PhoneBook()
+            {
+                Name = "Home Book",
+                Entries = new List<Entry> 
+                { 
+                    new Entry() { Name = "Bob", Number = "0211545454" },
+                    new Entry() { Name = "Joe", Number = "0119896562" }
+                }
+            };
+            return View("Edit", phonebook);
         }
 
-        // POST: EntryController/Edit/5
+        // POST: PhoneBookController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(IFormCollection collection, PhoneBook phoneBook)
         {
             try
             {
@@ -74,13 +70,13 @@ namespace Phonebook.Controllers
             }
         }
 
-        // GET: EntryController/Delete/5
+        // GET: PhoneBookController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: EntryController/Delete/5
+        // POST: PhoneBookController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
