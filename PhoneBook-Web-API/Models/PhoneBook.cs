@@ -8,14 +8,17 @@ namespace Phonebook.Models
     {
         public PhoneBook()
         {
-
+            Entries = new List<Entry>();
         }
 
         public PhoneBook(DTOs.PhoneBook phoneBook)
         {
             Id = phoneBook.Id;
             Name = phoneBook.Name;
-            Entries = phoneBook.Entries.Select(i => new Entry(i)).ToList();
+            if (phoneBook.Entries != null)
+            {
+                Entries = phoneBook.Entries.Select(i => new Entry(i)).ToList();
+            }
         }
 
         [Key]

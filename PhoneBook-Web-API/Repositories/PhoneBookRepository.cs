@@ -1,5 +1,6 @@
 ﻿using Phonebook.Models;
 using PhoneBook_Web_API.Context;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PhoneBook_Web_API.Repositories
@@ -14,7 +15,9 @@ namespace PhoneBook_Web_API.Repositories
 
         public PhoneBook CreateNewPhoneBook(PhoneBook phoneBook)
         {
-            return _context.PhoneBook.Add(phoneBook).Entity;
+            _context.PhoneBook.Add(phoneBook);
+            _context.SaveChanges();
+            return phoneBook;
         }
 
         public int DeletePhoneBook(PhoneBook phoneBook)
@@ -25,7 +28,17 @@ namespace PhoneBook_Web_API.Repositories
 
         public PhoneBook GetPhoneBookByName(string Name)
         {
-            return _context.PhoneBook.Where(i => i.Name.Equals(Name, System.StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
+            return _context.PhoneBook.Where(i => i.Name.Equals(Name)).ToList().SingleOrDefault();
+        }
+
+        public List<string> GetPhoneBookNames()
+        {
+            var phoneBookNames = _context.PhoneBook.Select(i => i.Name);
+            if (!phoneBookNames.Any())
+            {
+                return new List<string>();
+            }
+            return phoneBookNames.ToList();
         }
 
         public int UpdatePhoneBook(PhoneBook phoneBook)
