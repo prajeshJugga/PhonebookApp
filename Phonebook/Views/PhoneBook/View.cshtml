@@ -1,24 +1,58 @@
 ﻿@model Phonebook.Models.PhoneBook
 
 @{
-    ViewData["Title"] = "View";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>View</h1>
+<h1>View PhoneBook</h1>
+
+<h4>Phone Book</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+
+                <span asp-validation-for="Name" class="text-danger"></span>
+
+                <label class="control-label">Phone Book Contacts</label>
+
+                <div style="text-align:center;">  
+                    <table cellpadding="3" cellspacing="0" style="text-align:left; width:100%; border: 1px solid transparent">  
+                        <tr style="font-weight: bold; border: 1px solid transparent">  
+                            <td>Name</td>  
+                            <td>Number</td>  
+                        </tr>
+
+
+                        @if (Model.Entries != null && Model.Entries.Count > 0)
+                        {
+                            @for (var i = 0; i < Model.Entries.Count; i++)
+                            {
+                                <tr style="font-weight: bold;">  
+                                    <td style="width:20%; border: 1px solid transparent">@Html.TextBoxFor(m => m.Entries[i].Name, new { @class = "form-control" })</td>  
+                                    <td style="width:20%; border: 1px solid transparent">@Html.TextBoxFor(m => m.Entries[i].Number, new { @class = "form-control" })</td>  
+                                </tr>  
+                            }   
+                        }
+                    </table>  
+                </div>  
+
+            </div>
+@*            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>*@
+        </form>
+    </div>
+</div>
 
 <div>
-    <h4>PhoneBook</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Entries)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

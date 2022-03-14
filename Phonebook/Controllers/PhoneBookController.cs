@@ -19,9 +19,18 @@ namespace Phonebook.Controllers
         }
 
         // GET: PhoneBookController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Search()
         {
-            return View("View");
+            ViewBag.PhoneBookNames = await GetPhoneBookNames();
+            return View("Search");
+        }
+
+        // GET: PhoneBookController/Details/5
+        public async Task<ActionResult> Details(IFormCollection collection, PhoneBook phoneBookInput)
+        {
+            HttpClient httpClient = ApiClient.GetHttpClient(uri);
+            PhoneBook phoneBook = await PhoneBookRequester.GetPhoneBookByName(httpClient, phoneBookInput.Name);
+            return View("View", phoneBook);
         }
 
         // GET: PhoneBookController/Create
@@ -40,11 +49,11 @@ namespace Phonebook.Controllers
                 HttpClient httpClient = ApiClient.GetHttpClient(uri);
 
                 await PhoneBookRequester.CreatePhoneBook(httpClient, phoneBook);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Home", "Index");
             }
             catch
             {
-                return View();
+                return RedirectToAction("Shared", "Error", new ErrorViewModel { RequestId = "Unable to create Phonebook." });
             }
         }
 
@@ -97,6 +106,13 @@ namespace Phonebook.Controllers
             {
                 return View();
             }
+        }
+
+        [NonAction]
+        private async Task<List<string>> GetPhoneBookNames()
+        {
+            HttpClient httpClient = ApiClient.GetHttpClient(uri);
+            return await PhoneBookRequester.GetPhoneBookNames(httpClient);
         }
     }
 }

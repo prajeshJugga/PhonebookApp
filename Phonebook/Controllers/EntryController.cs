@@ -54,7 +54,7 @@ namespace Phonebook.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Shared", "Error", new ErrorViewModel { RequestId = "Unable to create Phonebook Entry." });
             }
         }
 

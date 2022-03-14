@@ -1,4 +1,5 @@
-﻿using Phonebook.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Phonebook.Models;
 using PhoneBook_Web_API.Context;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,9 @@ namespace PhoneBook_Web_API.Repositories
 
         public PhoneBook GetPhoneBookByName(string Name)
         {
-            return _context.PhoneBook.Where(i => i.Name.Equals(Name)).ToList().SingleOrDefault();
+            return _context.PhoneBook.Where(i => i.Name.Equals(Name))
+                .Include("Entries")
+                .ToList().SingleOrDefault();
         }
 
         public List<string> GetPhoneBookNames()
