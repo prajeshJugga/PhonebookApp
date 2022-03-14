@@ -1,13 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Phonebook.Client;
 using Phonebook.Models;
+using Phonebook.Requesters;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Phonebook.Controllers
 {
     public class EntryController : Controller
     {
+        private string uri = "http://localhost:8384";
         // GET: EntryController
         public ActionResult Index()
         {
@@ -21,30 +26,30 @@ namespace Phonebook.Controllers
         }
 
         // GET: EntryController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            ViewBag.PhoneBookNames = GetPhoneBookNames();
+            ViewBag.PhoneBookNames = await GetPhoneBookNames();
             return View("Create");
         }
 
         [NonAction]
-        private List<string> GetPhoneBookNames()
+        private async Task<List<string>> GetPhoneBookNames()
         {
-            return new List<string>
-            {
-                "Home",
-                "Work",
-                "Friends"
-            };
+            HttpClient httpClient = ApiClient.GetHttpClient(uri);
+            return await PhoneBookRequester.GetPhoneBookNames(httpClient);
         }
 
         // POST: EntryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection, Entry entry)
+        public async Task<ActionResult> Create(IFormCollection collection, Entry entry)
         {
             try
             {
+                HttpClient httpClient = ApiClient.GetHttpClient(uri);
+
+                await EntryRequester.CreateEntry(httpClient, entry);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
